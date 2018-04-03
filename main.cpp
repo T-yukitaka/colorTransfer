@@ -53,8 +53,20 @@ int main(int argc, const char * argv[]) {
             src_lab.at<cv::Vec3d>(y,x) = BGR2lab(src_bgr.at<cv::Vec3d>(y,x));
         }
     }
+    double lab_sum[3] = {};
+    double lab_square_sum[3] = {};
     
-    
+    for (int y = 0; y < src_bgr.rows; y++) {
+        for (int x = 0; x < src_bgr.cols; x++) {
+            for(int lab = 0; lab < 3; lab++) {
+                lab_sum[lab] += src_lab.at<cv::Vec3d>(y,x)[lab];
+                lab_square_sum[lab] += src_lab.at<cv::Vec3d>(y,x)[lab] * src_lab.at<cv::Vec3d>(y,x)[ lab];
+            }
+
+            
+//            src_lab.at<cv::Vec3d>(y,x) = BGR2lab(src_bgr.at<cv::Vec3d>(y,x));
+        }
+    }
     
     
     
