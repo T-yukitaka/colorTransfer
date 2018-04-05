@@ -49,14 +49,20 @@ cv::Vec3d lab2BGR(cv::Vec3d lab) {
 int main(int argc, const char * argv[]) {
     //Load src_bgr image (uchar)
     cv::Mat src_bgr;
-    src_bgr = cv::imread("src.jpg",CV_LOAD_IMAGE_COLOR);
+    std::string src;
+    std::cout << "入力する画像の名前を入力してください" << std::endl;
+    std::cin >> src;
+    src_bgr = cv::imread(src + ".jpg",CV_LOAD_IMAGE_COLOR);
     if(src_bgr.empty()) {
         std::cout << "error" << std::endl;
         return -1;
     }
     //Load ref_bgr image (uchar)
     cv::Mat ref_bgr;
-    ref_bgr = cv::imread("ref.jpg" ,CV_LOAD_IMAGE_COLOR);
+    std::string ref;
+    std::cout << "反映する画像の名前を入力してください" << std::endl;
+    std::cin >> ref;
+    ref_bgr = cv::imread(ref + ".jpg" ,CV_LOAD_IMAGE_COLOR);
     if(ref_bgr.empty()) {
         std::cout << "error" << std::endl;
         return -1;
@@ -81,6 +87,7 @@ int main(int argc, const char * argv[]) {
             src_lab.at<cv::Vec3d>(y,x) = BGR2lab(src_bgr.at<cv::Vec3d>(y,x));
         }
     }
+    
     //convert BGR to lab (ref)
     for (int y = 0; y < ref_height; y++) {
         for (int x = 0; x < ref_width; x++) {
@@ -101,6 +108,7 @@ int main(int argc, const char * argv[]) {
             }
         }
     }
+    
     //calculate lab_ref_sum, lab_square_ref_sum
     double lab_ref_sum[3] = {0.0, 0.0, 0.0};
     double lab_square_ref_sum[3] = {0.0, 0.0, 0.0};
@@ -135,8 +143,6 @@ int main(int argc, const char * argv[]) {
         lab_sigma_ref[lab] = sqrt(lab_square_ref_mean[lab] - lab_ref_mean[lab] * lab_ref_mean[lab]);
     }
     
-
-
     //calculate dst_lab
     cv::Mat dst_lab = cv::Mat::zeros(src_bgr.size(), CV_64FC3);
     for (int y = 0; y < src_height; y++) {
