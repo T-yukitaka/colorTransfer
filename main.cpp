@@ -49,24 +49,33 @@ cv::Vec3d lab2BGR(cv::Vec3d lab) {
 int main(int argc, const char * argv[]) {
     //Load src_bgr image (uchar)
     cv::Mat src_bgr;
-    std::string src;
-    std::cout << "入力する画像の名前を入力してください" << std::endl;
-    std::cin >> src;
-    src_bgr = cv::imread(src + ".jpg",CV_LOAD_IMAGE_COLOR);
-    if(src_bgr.empty()) {
-        std::cout << "error" << std::endl;
-        return -1;
-    }
+    std::string srcTitle;
+    bool src_must_return;
+    do {
+        std::cout << "入力する画像の名前を入力してください" << std::endl;
+        std::cin >> srcTitle;
+        src_bgr = cv::imread(srcTitle + ".jpg",CV_LOAD_IMAGE_COLOR);
+        src_must_return = false;
+        if(src_bgr.empty()) {
+            std::cout << "error" << std::endl;
+            src_must_return = true;
+        }
+    }while(src_must_return);
+    
     //Load ref_bgr image (uchar)
     cv::Mat ref_bgr;
-    std::string ref;
-    std::cout << "反映する画像の名前を入力してください" << std::endl;
-    std::cin >> ref;
-    ref_bgr = cv::imread(ref + ".jpg" ,CV_LOAD_IMAGE_COLOR);
-    if(ref_bgr.empty()) {
-        std::cout << "error" << std::endl;
-        return -1;
-    }
+    std::string refTitle;
+    bool ref_must_return;
+    do {
+        std::cout << "反映する画像の名前を入力してください" << std::endl;
+        std::cin >> refTitle;
+        ref_must_return = false;
+        ref_bgr = cv::imread(refTitle + ".jpg" ,CV_LOAD_IMAGE_COLOR);
+        if(ref_bgr.empty()) {
+            std::cout << "error" << std::endl;
+            ref_must_return = true;
+        }
+    }while(ref_must_return);
     
     //convert uchar -> double
     src_bgr.convertTo(src_bgr, CV_64FC3, 1.0 / 255.0);
@@ -160,15 +169,15 @@ int main(int argc, const char * argv[]) {
         }
     }
     
-    std::string title;
+    std::string dstTitle;
     std::cout << "保存する画像の名前を入力してください" << std::endl;
-    std::cin >> title;
+    std::cin >> dstTitle;
     
     //convert double -> uchar
     dst_bgr.convertTo(dst_bgr, CV_8UC3, 255.0);
-    cv::imshow("src_bgr", src_bgr);
-    cv::imshow("ref_bgr", ref_bgr);
-    cv::imshow("dst_bgr", dst_bgr);
-    cv::imwrite(title + ".jpg",dst_bgr);
+    cv::imshow(srcTitle, src_bgr);
+    cv::imshow(refTitle, ref_bgr);
+    cv::imshow(dstTitle, dst_bgr);
+    cv::imwrite(dstTitle + ".jpg",dst_bgr);
     cv::waitKey(0);
 }
